@@ -1,0 +1,3 @@
+Apostila do Curso: http://files.cod3r.com.br/apostila-docker.pdf
+
+Repositório do Curso: https://github.com/cod3rcursos/curso-docker
