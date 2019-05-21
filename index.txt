@@ -45,11 +45,20 @@ Entra no container no modo interativo {
 }
 
 Mapeamento de volume (mapear uma maquina do computador host para o container) {
+    OBS: CUIDADO COM 'QUALQUER' PASTA COM NOME SEPARADO (ex:"not fount","test case","my teste")
     1.Criar uma pasta (mkdir curso-docker)
     2.Dentro de pasta, criar outra (mkdir ex-volume)
-    3.Dentro de ex-volume execute $ docker container run -p 8080:80 -v $(pwd)/not found:/usr/share/nginx/html nginx     // -v <pasta do host que vai ser mapeada>:<pasta dentro do container que vai ser feito o mapeamento> esta mapeando o volume
+    3.Dentro de ex-volume execute $ docker container run -p 8080:80 -v $(pwd)/not-found:/usr/share/nginx/html nginx     // -v <pasta do host que vai ser mapeada>:<pasta dentro do container que vai ser feito o mapeamento> esta mapeando o volume
         explicando 3. {
-            $(pwd)/not found, esta procurando dentro de 'ex-volume' a pasta not found(que nao existe)
+            $(pwd)/not-found, esta procurando dentro de 'ex-volume' a pasta not-found(que nao existe)
             /usr/share/nginx/html, pasta onde o nginx lê o arquivo index por padrao
         } 
+    Resultado acima no linux : a pasta not-found foi criada porem nao aconteceu nada pois nao existia nenhum arquivo dentro da mesma
+
+    Ex2: 
+    1.Criar uma pasta (mkdir curso-docker)
+    2.Dentro de pasta, criar outra (mkdir ex-volume)
+    3.Dentro de ex-volume, crie uma pasta html (mkdir html)
+    4.Dentro de html crie um index.html com uma pagina simples em html
+    5.Dentro de ex-volume use, docker container run -p 8080:80 -v "$(pwd)"/html:/usr/share/nginx/html nginx
 }
