@@ -17,3 +17,39 @@ Instalando docker linux {
     $ sudo apt-get update
     $ sudo apt-get install docker-ce docker-ce-cli containerd.io
 }
+
+Hello-world {
+    docker container run hello-world
+}
+
+Comando run {
+    >sempre cria um novo container !
+    >faz 4 comandos
+        1.docker image pull
+        2.docker container certificates
+        3.docker container start
+        4.docker container exec
+    exemplos:
+        docker container run -it debian bash
+        docker container run --name mydeb -it debian bash   // --name da um nome para o container, bash ao final executa o bash nesse container
+        docker container run -p 8080:80 nginx    // -p 8080:80 > 8080 é a posta que vai ser exposta para fora do container(vamos acessar na 8080) e a porta 80 é a porta interna que o nginx vai ser startado, nginx ao final vai baixar a img do nginx
+
+}
+
+Lista os containers {
+    docker ps -a
+}
+
+Entra no container no modo interativo {
+     docker start -ai <container_id || name>
+}
+
+Mapeamento de volume (mapear uma maquina do computador host para o container) {
+    1.Criar uma pasta (mkdir curso-docker)
+    2.Dentro de pasta, criar outra (mkdir ex-volume)
+    3.Dentro de ex-volume execute $ docker container run -p 8080:80 -v $(pwd)/not found:/usr/share/nginx/html nginx     // -v <pasta do host que vai ser mapeada>:<pasta dentro do container que vai ser feito o mapeamento> esta mapeando o volume
+        explicando 3. {
+            $(pwd)/not found, esta procurando dentro de 'ex-volume' a pasta not found(que nao existe)
+            /usr/share/nginx/html, pasta onde o nginx lê o arquivo index por padrao
+        } 
+}
