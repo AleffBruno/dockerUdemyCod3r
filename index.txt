@@ -92,7 +92,19 @@ Mapeamento de volume (mapear uma maquina do computador host para o container) {
     Resultado acima no linux : Ao acessar <URL>:8080, o arquivo index da pasta html sera mostrado
 }
 
-Baixa uma imagem {
-    docker image pull <image_id || nome> 
+Dicas sobre image {
+    docker image pull <image_id || nome>  //baixa uma imagem 
     ex: docker image pull redis:latest
+    docker image ls     // lista as imagens
+    docker image rm     // remove uma imagem
+    docker image inspect        // inspeciona a imagem
+    docker image tag        // coloca tag em uma imagem
+    docker image build      // builda uma imagem
+    docker image push //publica a imagem
+}
+
+Dockerfile {
+   deve-se criar um arquivo Dockerfile e colocar as configs da imagem
+   docker image build -t ex-simple-build .   // -t é o nome da tag(tambem conhecido como nome da imagem), o ponto no final significa "pasta local", para ele procurar o Dockerfile nessa pasta
+   docker image build --build-arg S3_BUCKET=myapp -t ex-build-arg .     // gera uma imagem passando parametros para a mesma (exemplo do Dockerfile esta em ./build-com-arg/Dockerfile)
 }

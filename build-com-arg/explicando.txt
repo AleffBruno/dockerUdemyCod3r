@@ -1,0 +1,7 @@
+ARG S3_BUCKET=files {
+    valor padrao do argumento S3_BUCKET
+}
+
+ENV S3_BUCKET=${S3_BUCKET} {
+    seta uma variabel de ambiente S3_BUCKET com o valor ${S3_BUCKET}, que é 'files'
+}
