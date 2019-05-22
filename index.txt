@@ -22,6 +22,12 @@ Hello-world {
     docker container run hello-world
 }
 
+Gerenciar o container {
+    docker container start <container_id || name> // starta o container
+    docker container stop <container_id || name> // stopa o container
+    docker container restart <container_id || name> // reinicia o container
+}
+
 Comando run {
     >sempre cria um novo container !
     >faz 4 comandos
@@ -33,6 +39,7 @@ Comando run {
         docker container run -it debian bash
         docker container run --name mydeb -it debian bash   // --name da um nome para o container, bash ao final executa o bash nesse container
         docker container run -p 8080:80 nginx    // -p 8080:80 > 8080 é a posta que vai ser exposta para fora do container(vamos acessar na 8080) e a porta 80 é a porta interna que o nginx vai ser startado, nginx ao final vai baixar a img do nginx
+        docker container run -d --name ex-deamon-basic -p 8080:80 -v "$(pwd)"/html:/usr/share/nginx/html nginx // -d significa executar no modo deamon(ou background)
 
 }
 
@@ -45,10 +52,11 @@ Entra no container no modo interativo {
 }
 
 Mapeamento de volume (mapear uma maquina do computador host para o container) {
+    referencia: https://docs.docker.com/storage/volumes/
     OBS: CUIDADO COM 'QUALQUER' PASTA COM NOME SEPARADO (ex:"not fount","test case","my teste")
     1.Criar uma pasta (mkdir curso-docker)
     2.Dentro de pasta, criar outra (mkdir ex-volume)
-    3.Dentro de ex-volume execute $ docker container run -p 8080:80 -v $(pwd)/not-found:/usr/share/nginx/html nginx     // -v <pasta do host que vai ser mapeada>:<pasta dentro do container que vai ser feito o mapeamento> esta mapeando o volume
+    3.Dentro de ex-volume execute $ docker container run -p 8080:80 -v "$(pwd)"/not-found:/usr/share/nginx/html nginx     // -v <pasta do host que vai ser mapeada>:<pasta dentro do container que vai ser feito o mapeamento> esta mapeando o volume
         explicando 3. {
             $(pwd)/not-found, esta procurando dentro de 'ex-volume' a pasta not-found(que nao existe)
             /usr/share/nginx/html, pasta onde o nginx lê o arquivo index por padrao
@@ -61,4 +69,5 @@ Mapeamento de volume (mapear uma maquina do computador host para o container) {
     3.Dentro de ex-volume, crie uma pasta html (mkdir html)
     4.Dentro de html crie um index.html com uma pagina simples em html
     5.Dentro de ex-volume use, docker container run -p 8080:80 -v "$(pwd)"/html:/usr/share/nginx/html nginx
+    Resultado acima no linux : Ao acessar <URL>:8080, o arquivo index da pasta html sera mostrado
 }
