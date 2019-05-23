@@ -1,0 +1,3 @@
+docker container run -it -v
+
+-v foi necessario para mapear o volume para que o diretorio /app aponte para a pasta local do localhost(onde estamos agora), por que so assim ele vai conseguir ler o arquivo run.py
