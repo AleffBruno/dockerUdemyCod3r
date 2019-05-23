@@ -1,0 +1,10 @@
+
+COPY *.html /usr/share/nginx/html/ {
+    neste exemplo estamos copiando arquivos do host para dentro do container,
+    no caso o arquivo index.html foi copiado para dentro do container
+}
+
+RUN echo '<h1>sem conteudo</h1>' > /usr/share/nginx/html/conteudo.html {
+    cria o arquivo 'conteudo.html' contendo '<h1>sem conteudo</h1>'
+}
+
