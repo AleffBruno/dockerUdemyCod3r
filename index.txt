@@ -108,3 +108,12 @@ Dockerfile {
    docker image build -t ex-simple-build .   // -t é o nome da tag(tambem conhecido como nome da imagem), o ponto no final significa "pasta local", para ele procurar o Dockerfile nessa pasta
    docker image build --build-arg S3_BUCKET=myapp -t ex-build-arg .     // gera uma imagem passando parametros para a mesma (exemplo do Dockerfile esta em ./build-com-arg/Dockerfile)
 }
+
+Enviar imagens para DockerHub {
+    Login no DockerHub
+    Ter uma imagem pra subir, na aula foi criado uma imagem a partir de uma ja existente{
+        docker image tag ex-simple-build dockercod3r/simple-build:1.0 // dockercod3r é o nome do usuario la no dockerhub, simple-build sufixo da imagemm,1.0 é a 'tag/versao' dela
+    }
+    docker login --username=dockercod3r    //Login DockerHub command line
+    docker image push dockercod3r/simple-build:1.0
+}

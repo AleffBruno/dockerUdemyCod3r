@@ -3,5 +3,5 @@ ARG S3_BUCKET=files {
 }
 
 ENV S3_BUCKET=${S3_BUCKET} {
-    seta uma variabel de ambiente S3_BUCKET com o valor ${S3_BUCKET}, que é 'files'
+    seta uma variavel de ambiente S3_BUCKET com o valor ${S3_BUCKET}, que é 'files', ou o valor passando como parametro na construção da mesma
 }
