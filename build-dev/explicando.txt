@@ -1,3 +1,17 @@
-docker container run -it -v
+1 passo
+docker image build -t ex-build-dev .
 
--v foi necessario para mapear o volume para que o diretorio /app aponte para a pasta local do localhost(onde estamos agora), por que so assim ele vai conseguir ler o arquivo run.py
+antes de criar o container, primeiramente é necessario buildar a imagem a partir do Dockerfile
+
+2 passo
+docker container run -it -v "$(pwd)":/app -p 80:8000 --name python-server ex-build-dev
+
+-v foi necessario para mapear o volume para que o diretorio /app aponte para a pasta local do localhost(onde estamos agora), por que so assim ele vai conseguir ler o arquivo run.py(note que o arquivo run.py esta na maquina host e nao no container)
+
+-p 80:8000, o arquivo run.py ira executar na porta 8000, entao foi configurado para que a porta 80 do host esteja "escutando" a 8000 do container
+
+Bonus: lendo volume de um container para outro
+docker container run -it --volumes-from=python-server debian cat /log/http-server.log
+
+esse '/log/http-server.log' é exatamente o arquivo que foi definido em run.py
+
