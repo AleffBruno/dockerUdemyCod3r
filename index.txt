@@ -117,3 +117,107 @@ Enviar imagens para DockerHub {
     docker login --username=dockercod3r    //Login DockerHub command line
     docker image push dockercod3r/simple-build:1.0
 }
+
+Redes {
+    //None {
+        nao tem acesso a internet e nem acessa os outros containers locais
+        ex : docker container run -d --net none debian // --net none, esta setando a network como none
+    }
+
+    //Bridge {
+        $ docker network inspect bridge
+        [
+            {
+                "Name": "bridge",
+                "Id": "3d073739330c5fc375827a8baf16d925a244ce08334a88c86105f66aaab3bf35",
+                "Created": "2019-05-29T01:38:50.8211466Z",
+                "Scope": "local",
+                "Driver": "bridge",
+                "EnableIPv6": false,
+                "IPAM": {
+                    "Driver": "default",
+                    "Options": null,
+                    "Config": [
+                        {
+                            "Subnet": "172.17.0.0/16",
+                            "Gateway": "172.17.0.1"
+                        }
+                    ]
+                },
+                "Internal": false,
+                "Attachable": false,
+                "Ingress": false,
+                "ConfigFrom": {
+                    "Network": ""
+                },
+                "ConfigOnly": false,
+                "Containers": {},
+                "Options": {
+                    "com.docker.network.bridge.default_bridge": "true",
+                    "com.docker.network.bridge.enable_icc": "true",
+                    "com.docker.network.bridge.enable_ip_masquerade": "true",
+                    "com.docker.network.bridge.host_binding_ipv4": "0.0.0.0",
+                    "com.docker.network.bridge.name": "docker0",
+                    "com.docker.network.driver.mtu": "1500"
+                },
+                "Labels": {}
+            }
+        ]
+
+        // Atividade -> Criar 2 containers e fazer 1 acessar o outro usando o comando 'ping'
+        $ docker container run -d --name container1 alpine sleep 1000
+        $ docker container exec -it container1 ifconfig // semelhante ao ipconfig
+        temos o IP 172.17.0.2 // que é um "filho" da rede bridge "pai", proveniente de 172.17.0.0, visto no Json acima
+        $ docker container run -d --name container2 alpine sleep 1000
+        $ docker container exec -it container2 ifconfig // semelhante ao ipconfig
+        temos o IP 172.17.0.3 // que é um "filho" da rede bridge "pai", proveniente de 172.17.0.0, visto no Json acima
+        $ docker container exec -it container1 ping 172.17.0.3 // enviando um ping do container1 para container2, tb é possivel enviar ping para a "internet"
+
+        // Atividade -> Criar uma nova rede, criar um container nessa rede, fazer os container de outra rede se comunicarem com essa nova rede
+        $ docker network create --driver bridge rede_nova
+        $ docker network ls
+        $ docker network inspect rede_nova
+        [
+            {
+                "Name": "rede_nova",
+                "Id": "81ff23caf9a1c705daea253f318b1e5f64e53d333a4910e4527ac1ab90108bad",
+                "Created": "2019-05-29T11:09:33.737191431Z",
+                "Scope": "local",
+                "Driver": "bridge",
+                "EnableIPv6": false,
+                "IPAM": {
+                    "Driver": "default",
+                    "Options": {},
+                    "Config": [
+                        {
+                            "Subnet": "172.19.0.0/16",
+                            "Gateway": "172.19.0.1"
+                        }
+                    ]
+                },
+                "Internal": false,
+                "Attachable": false,
+                "Ingress": false,
+                "ConfigFrom": {
+                    "Network": ""
+                },
+                "ConfigOnly": false,
+                "Containers": {},
+                "Options": {},
+                "Labels": {}
+            }
+        ]
+
+        $ docker container run -d --name container3 --net rede_nova alpine sleep 1000
+        $ docker container exec -it container3 ifconfig
+        temos o ip 172.19.0.2 // que é um "filho" da rede rede_nova "pai", proveniente de 172.19.0.0, visto no Json acima
+        $ docker container exec -it container3 ping 172.17.0.2 // Falha!, pois as redes nao tem nenhuma conexao
+        $ docker network connect bridge container3 // agora container3 tem a conexao com a rede_nova e a rede bridge
+        $ docker container exec -it container3 ifconfig // mostra esse container tendo acesso as 2 redes
+        temos o IP 172.19.0.2 e 172.17.0.2 // um IP e da rede 'bridge' e o outro é da rede 'rede_nova'
+        $ docker container exec -it container3 ping 172.17.0.2
+        
+    }
+    //host
+    //Overlay (Swarm)
+}
