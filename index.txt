@@ -216,8 +216,104 @@ Redes {
         $ docker container exec -it container3 ifconfig // mostra esse container tendo acesso as 2 redes
         temos o IP 172.19.0.2 e 172.17.0.2 // um IP e da rede 'bridge' e o outro é da rede 'rede_nova'
         $ docker container exec -it container3 ping 172.17.0.2
+        SUCESSO
+        $ docker network disconnect bridge container3 // tira a conexao da rede bridge com o container3
+    }
+
+    //host {
+        Faz o container usar diretamente a interface de rede da maquina host, nao tem o bridge como intermediario ( tem um nivel de proteção mais baixo, porem uma velocidade maior de comunicação )
+        $ ifconfig // no host
+        br-0a539551ca31: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
+        inet 172.18.0.1  netmask 255.255.0.0  broadcast 172.18.255.255
+        ether 02:42:99:78:69:6e  txqueuelen 0  (Ethernet)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 0  bytes 0 (0.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+        br-81ff23caf9a1: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
+        inet 172.19.0.1  netmask 255.255.0.0  broadcast 172.19.255.255
+        ether 02:42:eb:3e:45:3d  txqueuelen 0  (Ethernet)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 0  bytes 0 (0.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+        docker0: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
+        inet 172.17.0.1  netmask 255.255.0.0  broadcast 172.17.255.255
+        ether 02:42:39:8f:f6:f7  txqueuelen 0  (Ethernet)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 0  bytes 0 (0.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+        eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 10.0.0.4  netmask 255.255.255.0  broadcast 10.0.0.255
+        inet6 fe80::20d:3aff:fe1f:248  prefixlen 64  scopeid 0x20<link>
+        ether 00:0d:3a:1f:02:48  txqueuelen 1000  (Ethernet)
+        RX packets 32817  bytes 46554587 (46.5 MB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 2944  bytes 369511 (369.5 KB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+        lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+        inet 127.0.0.1  netmask 255.0.0.0
+        inet6 ::1  prefixlen 128  scopeid 0x10<host>
+        loop  txqueuelen 1000  (Local Loopback)
+        RX packets 138  bytes 12406 (12.4 KB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 138  bytes 12406 (12.4 KB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+
+        $ docker container run -d --name container4 --net host alpine sleep 1000
+        $ docker container exec -it container4 ifconfig
+
+
+        br-0a539551ca31 Link encap:Ethernet  HWaddr 02:42:99:78:69:6E
+          inet addr:172.18.0.1  Bcast:172.18.255.255  Mask:255.255.0.0
+          UP BROADCAST MULTICAST  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+
+        br-81ff23caf9a1 Link encap:Ethernet  HWaddr 02:42:EB:3E:45:3D
+          inet addr:172.19.0.1  Bcast:172.19.255.255  Mask:255.255.0.0
+          UP BROADCAST MULTICAST  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+
+        docker0   Link encap:Ethernet  HWaddr 02:42:39:8F:F6:F7
+          inet addr:172.17.0.1  Bcast:172.17.255.255  Mask:255.255.0.0
+          UP BROADCAST MULTICAST  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+
+        eth0      Link encap:Ethernet  HWaddr 00:0D:3A:1F:02:48
+          inet addr:10.0.0.4  Bcast:10.0.0.255  Mask:255.255.255.0
+          inet6 addr: fe80::20d:3aff:fe1f:248/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:34182 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:4648 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:46994037 (44.8 MiB)  TX bytes:741567 (724.1 KiB)
+
+        lo        Link encap:Local Loopback
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:138 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:138 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:12406 (12.1 KiB)  TX bytes:12406 (12.1 KiB)
+
+
         
     }
-    //host
     //Overlay (Swarm)
 }
